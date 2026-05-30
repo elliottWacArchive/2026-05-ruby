@@ -1,0 +1,25 @@
+<div class="max-w-md mx-auto">
+  <h1 class="text-3xl text-amber-400 font-bold mb-8">Nouveau personnage</h1>
+
+  <%= form_with model: @character, class: "space-y-6" do |f| %>
+    <% if @character.errors.any? %>
+      <div class="bg-red-900 border border-red-700 text-red-200 p-4 rounded">
+        <% @character.errors.full_messages.each do |msg| %>
+          <p><%= msg %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :name, "Nom du héros", class: "block text-amber-300 mb-1" %>
+      <%= f.text_field :name, class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 focus:border-amber-600 outline-none", placeholder: "Aragorn..." %>
+    </div>
+
+    <p class="text-stone-400 text-sm">
+      Ton héros démarrera avec : Niveau 1 · 10 PV · 10 Force<br>
+      Tu auras 10 points à distribuer après la création.
+    </p>
+
+    <%= f.submit "Créer mon héros", class: "w-full bg-amber-700 hover:bg-amber-600 text-white font-bold py-3 rounded cursor-pointer" %>
+  <% end %>
+</div>

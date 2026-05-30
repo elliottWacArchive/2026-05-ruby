@@ -1,0 +1,71 @@
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-start gap-6 mb-8">
+    <div class="shrink-0">
+      <% if @character.avatar.attached? %>
+        <%= image_tag @character.avatar, class: "w-24 h-24 rounded-full object-cover border-2 border-amber-700" %>
+      <% else %>
+        <div class="w-24 h-24 rounded-full bg-stone-700 flex items-center justify-center text-5xl border-2 border-stone-600">🧙</div>
+      <% end %>
+
+      <%= form_with url: update_avatar_character_path(@character), method: :patch, multipart: true, class: "mt-2 text-center" do |f| %>
+        <%= f.file_field :avatar, accept: "image/*", class: "text-xs text-stone-400 w-24", id: "avatar_input" %>
+        <%= f.submit "Changer", class: "text-xs text-amber-600 hover:text-amber-400 cursor-pointer mt-1 block" %>
+      <% end %>
+    </div>
+
+    <div>
+      <h1 class="text-3xl font-bold text-amber-400"><%= @character.name %></h1>
+      <div class="text-stone-400 text-sm mb-4">Niveau <%= @character.level %></div>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="bg-stone-800 rounded p-3">
+          <div class="text-stone-400">XP</div>
+          <div class="text-amber-200 font-bold"><%= @character.experience %> / <%= @character.xp_for_next_level %></div>
+          <div class="w-full bg-stone-700 rounded-full h-1.5 mt-1">
+            <div class="bg-amber-500 h-1.5 rounded-full" style="width:<%= (@character.experience.to_f / @character.xp_for_next_level * 100).round %>%"></div>
+          </div>
+        </div>
+        <div class="bg-stone-800 rounded p-3">
+          <div class="text-stone-400">PV</div>
+          <div class="text-green-300 font-bold"><%= @character.effective_hp %></div>
+          <div class="text-stone-500 text-xs">base <%= @character.base_hp %></div>
+        </div>
+        <div class="bg-stone-800 rounded p-3">
+          <div class="text-stone-400">Force</div>
+          <div class="text-red-300 font-bold"><%= @character.effective_strength %></div>
+          <div class="text-stone-500 text-xs">base <%= @character.base_strength %></div>
+        </div>
+        <div class="bg-stone-800 rounded p-3">
+          <div class="text-stone-400">Or</div>
+          <div class="text-yellow-300 font-bold"><%= @character.gold %> 🪙</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if @character.unspent_points > 0 %>
+    <div class="bg-amber-900 border border-amber-700 rounded-lg p-6 mb-6">
+      <h2 class="text-amber-300 font-bold mb-4">✨ <%= @character.unspent_points %> point(s) à distribuer</h2>
+      <%= form_with url: spend_points_character_path(@character), method: :patch, class: "flex gap-4 items-end" do |f| %>
+        <div>
+          <label class="block text-sm text-stone-300 mb-1">PV</label>
+          <%= number_field_tag :hp_points, 0, min: 0, max: @character.unspent_points,
+              class: "w-20 bg-stone-800 border border-stone-600 text-amber-100 rounded px-3 py-2 text-center" %>
+        </div>
+        <div>
+          <label class="block text-sm text-stone-300 mb-1">Force</label>
+          <%= number_field_tag :strength_points, 0, min: 0, max: @character.unspent_points,
+              class: "w-20 bg-stone-800 border border-stone-600 text-amber-100 rounded px-3 py-2 text-center" %>
+        </div>
+        <button class="bg-amber-700 hover:bg-amber-600 text-white px-5 py-2 rounded">Confirmer</button>
+      <% end %>
+      <p class="text-stone-400 text-xs mt-2">Ces points sont définitifs une fois attribués.</p>
+    </div>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= link_to "🎒 Inventaire", character_inventories_path(@character), class: "bg-stone-700 hover:bg-stone-600 px-5 py-2 rounded text-amber-200" %>
+    <%= link_to "📜 Quêtes", quests_path, class: "bg-stone-700 hover:bg-stone-600 px-5 py-2 rounded text-amber-200" %>
+    <%= link_to "🏪 Marché", auction_listings_path, class: "bg-stone-700 hover:bg-stone-600 px-5 py-2 rounded text-amber-200" %>
+  </div>
+</div>
