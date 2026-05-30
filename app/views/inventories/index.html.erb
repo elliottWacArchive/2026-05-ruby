@@ -1,0 +1,61 @@
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-3xl text-amber-400 font-bold mb-2">🎒 Inventaire de <%= @character.name %></h1>
+
+  <div class="grid grid-cols-3 gap-4 mb-8">
+    <% [:hat, :weapon, :shield].each do |slot| %>
+      <div class="bg-stone-800 border border-stone-700 rounded-lg p-4 text-center">
+        <div class="text-2xl mb-1"><%= { hat: "🎩", weapon: "⚔️", shield: "🛡️" }[slot] %></div>
+        <div class="text-stone-400 text-xs mb-2"><%= { hat: "Chapeau", weapon: "Arme", shield: "Bouclier" }[slot] %></div>
+        <% item = @equipped[slot] %>
+        <% if item %>
+          <div class="text-amber-200 text-sm font-bold"><%= item.name %></div>
+          <div class="text-xs text-stone-400">
+            <% item.hp_bonus.nonzero? && (print "+#{item.hp_bonus} PV") %>
+            <% item.strength_bonus.nonzero? && (print "+#{item.strength_bonus} Force") %>
+          </div>
+        <% else %>
+          <div class="text-stone-600 text-sm">vide</div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <h2 class="text-xl text-amber-300 mb-4">Tous les objets</h2>
+
+  <% if @inventories.empty? %>
+    <p class="text-stone-500">Tu n'as pas encore d'objets. Termine des quêtes pour en gagner !</p>
+  <% else %>
+    <div class="space-y-3">
+      <% @inventories.each do |inv| %>
+        <div class="bg-stone-800 border <%= inv.equipped? ? 'border-amber-600' : 'border-stone-700' %> rounded-lg p-4 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <% if inv.item.image.attached? %>
+              <%= image_tag inv.item.image, class: "w-10 h-10 rounded object-cover" %>
+            <% else %>
+              <div class="w-10 h-10 rounded bg-stone-700 flex items-center justify-center">
+                <%= { "hat" => "🎩", "weapon" => "⚔️", "shield" => "🛡️" }[inv.item.slot] %>
+              </div>
+            <% end %>
+            <div>
+              <div class="font-bold text-amber-200">
+                <%= inv.item.name %>
+                <% if inv.equipped? %><span class="text-xs text-amber-500 ml-1">équipé</span><% end %>
+              </div>
+              <div class="text-sm text-stone-400">
+                <%= inv.item.slot_label %>
+                <% if inv.item.hp_bonus.nonzero? %> · <%= inv.item.hp_bonus > 0 ? "+" : "" %><%= inv.item.hp_bonus %> PV<% end %>
+                <% if inv.item.strength_bonus.nonzero? %> · <%= inv.item.strength_bonus > 0 ? "+" : "" %><%= inv.item.strength_bonus %> Force<% end %>
+                <% if inv.item.xp_multiplier != 1.0 %> · ×<%= inv.item.xp_multiplier %> XP<% end %>
+              </div>
+            </div>
+          </div>
+
+          <%= button_to inv.equipped? ? "Déséquiper" : "Équiper",
+              toggle_equip_character_inventory_path(@character, inv),
+              method: :patch,
+              class: "text-sm px-4 py-2 rounded #{inv.equipped? ? 'bg-stone-600 hover:bg-stone-500 text-stone-200' : 'bg-amber-700 hover:bg-amber-600 text-white'}" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
