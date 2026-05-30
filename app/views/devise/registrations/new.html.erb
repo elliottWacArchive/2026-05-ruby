@@ -1,0 +1,46 @@
+<div class="max-w-md mx-auto mt-8">
+  <h1 class="text-3xl text-amber-400 font-bold mb-8 text-center">Créer un compte</h1>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), class: "space-y-5") do |f| %>
+    <% if resource.errors.any? %>
+      <div class="bg-red-900 border border-red-700 p-4 rounded text-red-200 text-sm">
+        <% resource.errors.full_messages.each { |m| %><p><%= m %></p><% } %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :username, "Nom d'utilisateur", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.text_field :username, autocomplete: "username",
+          class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 outline-none focus:border-amber-600" %>
+    </div>
+    <div>
+      <%= f.label :email, "Email", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.email_field :email, autocomplete: "email",
+          class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 outline-none focus:border-amber-600" %>
+    </div>
+    <div>
+      <%= f.label :password, "Mot de passe", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.password_field :password, autocomplete: "new-password",
+          class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 outline-none focus:border-amber-600" %>
+    </div>
+    <div>
+      <%= f.label :password_confirmation, "Confirmation", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password",
+          class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 outline-none focus:border-amber-600" %>
+    </div>
+    <div>
+      <%= f.label :role, "Rôle", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.select :role, [["Joueur", "player"], ["Maître du jeu", "game_master"]],
+          { selected: "player" },
+          class: "bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 w-full" %>
+    </div>
+
+    <div class="pt-2">
+      <%= f.submit "S'inscrire", class: "w-full bg-amber-700 hover:bg-amber-600 text-white font-bold py-3 rounded cursor-pointer" %>
+    </div>
+  <% end %>
+
+  <div class="text-center mt-8">
+    <%= link_to "Déjà un compte ? Se connecter", new_user_session_path, class: "text-stone-400 hover:text-stone-200 text-sm" %>
+  </div>
+</div>

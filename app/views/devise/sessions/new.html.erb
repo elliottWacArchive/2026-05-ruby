@@ -1,0 +1,23 @@
+<div class="max-w-md mx-auto mt-8">
+  <h1 class="text-3xl text-amber-400 font-bold mb-8 text-center">Connexion</h1>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "space-y-5") do |f| %>
+    <div>
+      <%= f.label :email, "Email", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email",
+          class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 outline-none focus:border-amber-600" %>
+    </div>
+    <div>
+      <%= f.label :password, "Mot de passe", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.password_field :password, autocomplete: "current-password",
+          class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 outline-none focus:border-amber-600" %>
+    </div>
+    <div class="pt-2">
+      <%= f.submit "Se connecter", class: "w-full bg-amber-700 hover:bg-amber-600 text-white font-bold py-3 rounded cursor-pointer" %>
+    </div>
+  <% end %>
+
+  <div class="text-center mt-8">
+    <%= link_to "Pas encore de compte ? S'inscrire", new_user_registration_path, class: "text-stone-400 hover:text-stone-200 text-sm" %>
+  </div>
+</div>
