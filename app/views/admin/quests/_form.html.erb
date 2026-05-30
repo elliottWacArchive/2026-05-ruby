@@ -1,0 +1,22 @@
+<%= form_with model: [:admin, quest], class: "space-y-6" do |f| %>
+  <% if quest.errors.any? %>
+    <div class="bg-red-900 border border-red-700 p-4 rounded text-red-200 text-sm">
+      <% quest.errors.full_messages.each { |m| content_tag(:p, m) } %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, "Nom", class: "block text-amber-300 mb-1 text-sm" %>
+    <%= f.text_field :name, class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2" %>
+  </div>
+  <div>
+    <%= f.label :description, "Description", class: "block text-amber-300 mb-1 text-sm" %>
+    <%= f.text_area :description, rows: 3, class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2" %>
+  </div>
+  <div>
+    <%= f.label :completion_xp, "XP fin de quête", class: "block text-amber-300 mb-1 text-sm" %>
+    <%= f.number_field :completion_xp, min: 1, class: "bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2 w-32" %>
+  </div>
+
+  <%= f.submit "Enregistrer", class: "bg-red-800 hover:bg-red-700 text-white px-6 py-2 rounded cursor-pointer" %>
+<% end %>

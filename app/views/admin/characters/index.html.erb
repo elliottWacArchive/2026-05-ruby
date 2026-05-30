@@ -1,0 +1,18 @@
+<h1 class="text-2xl text-red-300 font-bold mb-6">Joueurs</h1>
+
+<div class="space-y-3">
+  <% @characters.each do |char| %>
+    <div class="bg-stone-800 border border-stone-700 rounded-lg p-4 flex items-center justify-between">
+      <div>
+        <div class="font-bold text-amber-200"><%= char.name %></div>
+        <div class="text-xs text-stone-400">
+          <%= char.user.username %> · Niv. <%= char.level %> ·
+          <%= char.base_hp %> PV · <%= char.base_strength %> Force
+          <% active = char.quest_progresses.find_by(status: "in_progress") %>
+          <% if active %> · <span class="text-amber-500">en quête : <%= active.quest.name %></span><% end %>
+        </div>
+      </div>
+      <%= link_to "Détails", admin_character_path(char), class: "text-red-300 hover:text-red-200 text-sm" %>
+    </div>
+  <% end %>
+</div>

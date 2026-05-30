@@ -1,0 +1,39 @@
+<h1 class="text-3xl text-red-300 font-bold mb-8">Tableau de bord</h1>
+
+<div class="grid grid-cols-3 gap-6 mb-10">
+  <div class="bg-stone-800 border border-stone-700 rounded-lg p-5 text-center">
+    <div class="text-3xl font-bold text-amber-300"><%= @quests_count %></div>
+    <div class="text-stone-400 text-sm mt-1">Quêtes</div>
+  </div>
+  <div class="bg-stone-800 border border-stone-700 rounded-lg p-5 text-center">
+    <div class="text-3xl font-bold text-amber-300"><%= @characters_count %></div>
+    <div class="text-stone-400 text-sm mt-1">Personnages</div>
+  </div>
+  <div class="bg-stone-800 border border-stone-700 rounded-lg p-5 text-center">
+    <div class="text-3xl font-bold text-amber-300"><%= @items_count %></div>
+    <div class="text-stone-400 text-sm mt-1">Objets</div>
+  </div>
+</div>
+
+<h2 class="text-xl text-red-200 mb-4">Parties en cours</h2>
+
+<% if @active_progresses.empty? %>
+  <p class="text-stone-500">Aucune partie active.</p>
+<% else %>
+  <div class="space-y-3">
+    <% @active_progresses.each do |prog| %>
+      <div class="bg-stone-800 border border-stone-700 rounded-lg p-4 flex items-center justify-between">
+        <div>
+          <span class="text-amber-200 font-bold"><%= prog.character.name %></span>
+          <span class="text-stone-400 text-sm ml-2">· <%= prog.quest.name %></span>
+          <div class="text-xs text-stone-500">
+            étape <%= prog.current_step_index + 1 %> / <%= prog.quest.steps.count %>
+            · mis à jour <%= time_ago_in_words(prog.updated_at) %>
+          </div>
+        </div>
+        <%= link_to "Voir", admin_character_path(prog.character),
+            class: "text-red-300 hover:text-red-200 text-sm" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

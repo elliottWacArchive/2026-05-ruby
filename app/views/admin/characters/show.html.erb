@@ -1,0 +1,54 @@
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl text-red-300 font-bold"><%= @character.name %></h1>
+  <%= link_to "← Joueurs", admin_characters_path, class: "text-stone-400 hover:text-stone-200 text-sm" %>
+</div>
+
+<div class="grid grid-cols-2 gap-6 mb-8">
+  <div class="bg-stone-800 border border-stone-700 rounded-lg p-5">
+    <h2 class="text-amber-300 mb-3 font-bold">Stats</h2>
+    <div class="space-y-1 text-sm">
+      <div>Niveau : <span class="text-amber-200"><%= @character.level %></span></div>
+      <div>XP : <span class="text-amber-200"><%= @character.experience %></span></div>
+      <div>PV : <span class="text-green-300"><%= @character.base_hp %></span></div>
+      <div>Force : <span class="text-red-300"><%= @character.base_strength %></span></div>
+      <div>Or : <span class="text-yellow-300"><%= @character.gold %></span></div>
+    </div>
+  </div>
+
+  <div class="bg-stone-800 border border-stone-700 rounded-lg p-5">
+    <h2 class="text-amber-300 mb-3 font-bold">Partie en cours</h2>
+    <% if @active_progress %>
+      <div class="text-sm space-y-1">
+        <div>Quête : <span class="text-amber-200"><%= @active_progress.quest.name %></span></div>
+        <div>Étape : <%= @active_progress.current_step_index + 1 %> / <%= @active_progress.quest.steps.count %></div>
+      </div>
+    <% else %>
+      <p class="text-stone-500 text-sm">Aucune partie active.</p>
+    <% end %>
+  </div>
+</div>
+
+<% if @active_progress && @active_progress.current_step&.npc %>
+  <% npc = @active_progress.current_step.npc %>
+  <div class="bg-stone-800 border border-stone-700 rounded-lg p-5">
+    <h2 class="text-amber-300 mb-4 font-bold">💬 Chat — parler en tant que <%= npc.name %></h2>
+
+    <%= turbo_stream_from "npc_chat_#{npc.id}_char_#{@character.id}" %>
+    <div id="npc_chat_<%= npc.id %>_char_<%= @character.id %>"
+         class="bg-stone-900 rounded p-3 h-48 overflow-y-auto space-y-2 mb-3">
+      <% @messages.each do |msg| %>
+        <%= render "messages/message", message: msg %>
+      <% end %>
+    </div>
+
+    <%= form_with url: messages_path, method: :post do |f| %>
+      <%= hidden_field_tag :npc_id, npc.id %>
+      <%= hidden_field_tag :character_id, @character.id %>
+      <div class="flex gap-3">
+        <%= text_field_tag :content, "", placeholder: "Message de #{npc.name}...",
+            class: "flex-1 bg-stone-900 border border-stone-700 text-amber-100 rounded px-4 py-2 text-sm" %>
+        <button class="bg-red-800 hover:bg-red-700 text-white px-5 py-2 rounded text-sm">Envoyer</button>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,89 @@
+<%= form_with model: [:admin, quest, step], class: "space-y-6" do |f| %>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :position, "Position", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.number_field :position, min: 1, class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2" %>
+    </div>
+    <div>
+      <%= f.label :experience_reward, "XP récompense", class: "block text-amber-300 mb-1 text-sm" %>
+      <%= f.number_field :experience_reward, min: 0, class: "w-full bg-stone-800 border border-stone-600 text-amber-100 rounded px-4 py-2" %>
+    </div>
+  </div>
+
+  <fieldset class="border border-amber-800 rounded-lg p-4">
+    <legend class="text-amber-400 text-sm px-2">🔮 Énigme</legend>
+    <%= f.fields_for :riddle do |r| %>
+      <div class="mb-4">
+        <%= r.label :question, "Question", class: "block text-stone-400 mb-1 text-sm" %>
+        <%= r.text_area :question, rows: 2, class: "w-full bg-stone-900 border border-stone-700 text-amber-100 rounded px-3 py-2" %>
+      </div>
+
+      <div class="text-stone-400 text-xs mb-2">Réponses — coche celle(s) qui sont correctes</div>
+
+      <%# conteneur + template pour ajout dynamique %>
+      <div data-controller="nested-form">
+        <div data-nested-form-target="container" class="space-y-2 mb-3">
+          <%= r.fields_for :answers do |a| %>
+            <div data-nested-form-target="row" class="flex items-center gap-3">
+              <%= a.hidden_field :_destroy, value: "0", data: { destroy: true } %>
+              <%= a.text_field :text, placeholder: "Réponse...",
+                  class: "flex-1 bg-stone-900 border border-stone-700 text-amber-100 rounded px-3 py-1.5 text-sm" %>
+              <label class="flex items-center gap-1 text-stone-400 text-xs shrink-0">
+                <%= a.check_box :correct, class: "accent-green-500 w-4 h-4" %>
+                correcte
+              </label>
+              <button data-action="nested-form#removeRow" class="text-red-500 hover:text-red-400 text-xs shrink-0">✕</button>
+            </div>
+          <% end %>
+        </div>
+
+        <%# template pour une nouvelle réponse (index = NEW_RECORD, remplacé par timestamp en JS) %>
+        <template data-nested-form-target="template">
+          <div data-nested-form-target="row" class="flex items-center gap-3 mt-2">
+            <input type="hidden" name="step[riddle_attributes][answers_attributes][NEW_RECORD][_destroy]" value="0" data-destroy="true">
+            <input type="text" name="step[riddle_attributes][answers_attributes][NEW_RECORD][text]" placeholder="Réponse..."
+                   class="flex-1 bg-stone-900 border border-stone-700 text-amber-100 rounded px-3 py-1.5 text-sm">
+            <label class="flex items-center gap-1 text-stone-400 text-xs shrink-0">
+              <input type="checkbox" name="step[riddle_attributes][answers_attributes][NEW_RECORD][correct]" value="1" class="accent-green-500 w-4 h-4">
+              correcte
+            </label>
+            <button data-action="nested-form#removeRow" class="text-red-500 hover:text-red-400 text-xs shrink-0">✕</button>
+          </div>
+        </template>
+
+        <button data-action="nested-form#addRow"
+                class="text-amber-500 hover:text-amber-400 text-sm mt-1 flex items-center gap-1">
+          ＋ Ajouter une réponse
+        </button>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <fieldset class="border border-red-800 rounded-lg p-4">
+    <legend class="text-red-400 text-sm px-2">👹 PNJ</legend>
+    <%= f.fields_for :npc do |n| %>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="col-span-1">
+          <%= n.label :name, "Nom", class: "block text-stone-400 mb-1 text-sm" %>
+          <%= n.text_field :name, class: "w-full bg-stone-900 border border-stone-700 text-amber-100 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= n.label :hp, "PV", class: "block text-stone-400 mb-1 text-sm" %>
+          <%= n.number_field :hp, min: 1, class: "w-full bg-stone-900 border border-stone-700 text-amber-100 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= n.label :strength, "Force", class: "block text-stone-400 mb-1 text-sm" %>
+          <%= n.number_field :strength, min: 1, class: "w-full bg-stone-900 border border-stone-700 text-amber-100 rounded px-3 py-2" %>
+        </div>
+      </div>
+      <div class="mt-3">
+        <%= n.label :avatar, "Avatar (image)", class: "block text-stone-400 mb-1 text-sm" %>
+        <%= n.file_field :avatar, accept: "image/*", class: "text-sm text-stone-400" %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <div class="pt-2">
+    <%= f.submit "Enregistrer", class: "bg-red-800 hover:bg-red-700 text-white px-6 py-2 rounded cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,63 @@
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl text-red-300 font-bold"><%= @quest.name %></h1>
+  <div class="flex gap-3">
+    <%= link_to "Modifier", edit_admin_quest_path(@quest), class: "text-amber-400 hover:text-amber-300 text-sm" %>
+    <%= link_to "← Quêtes", admin_quests_path, class: "text-stone-400 hover:text-stone-200 text-sm" %>
+  </div>
+</div>
+
+<p class="text-stone-400 mb-2"><%= @quest.description %></p>
+<p class="text-stone-500 text-sm mb-8">XP fin de quête : <%= @quest.completion_xp %></p>
+
+<div class="flex items-center justify-between mb-4">
+  <h2 class="text-xl text-amber-300">Étapes</h2>
+  <%= link_to "＋ Ajouter une étape", new_admin_quest_step_path(@quest),
+      class: "bg-stone-700 hover:bg-stone-600 text-amber-200 px-4 py-2 rounded text-sm" %>
+</div>
+
+<% if @steps.empty? %>
+  <p class="text-stone-500">Aucune étape.</p>
+<% else %>
+  <div class="space-y-4">
+    <% @steps.each do |step| %>
+      <div class="bg-stone-800 border border-stone-700 rounded-lg p-5">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <span class="text-amber-300 font-bold">Étape <%= step.position %></span>
+            <span class="text-stone-400 text-sm ml-2">— <%= step.experience_reward %> XP</span>
+          </div>
+          <div class="flex gap-3 text-sm">
+            <%= link_to "Modifier", edit_admin_quest_step_path(@quest, step), class: "text-amber-400 hover:text-amber-300" %>
+            <%= button_to "Supprimer", admin_quest_step_path(@quest, step), method: :delete,
+                data: { turbo_confirm: "Supprimer cette étape ?" },
+                class: "text-stone-400 hover:text-red-300" %>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <% if step.riddle %>
+            <div class="bg-stone-900 rounded p-3">
+              <div class="text-amber-500 text-xs mb-1">Énigme</div>
+              <p class="text-stone-300 text-sm"><%= step.riddle.question %></p>
+              <ul class="mt-2 space-y-1">
+                <% step.riddle.answers.each do |a| %>
+                  <li class="text-xs <%= a.correct? ? 'text-green-400' : 'text-stone-500' %>">
+                    <%= a.correct? ? "✓" : "✗" %> <%= a.text %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <% if step.npc %>
+            <div class="bg-stone-900 rounded p-3">
+              <div class="text-red-400 text-xs mb-1">PNJ</div>
+              <div class="font-bold text-red-200 text-sm"><%= step.npc.name %></div>
+              <div class="text-xs text-stone-400"><%= step.npc.hp %> PV · <%= step.npc.strength %> Force</div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
