@@ -1,0 +1,39 @@
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-3xl text-amber-400 font-bold mb-8">📜 Quêtes</h1>
+
+  <% if @quests.empty? %>
+    <p class="text-stone-500">Aucune quête disponible pour l'instant. Le maître du jeu en prépare sûrement...</p>
+  <% else %>
+    <div class="space-y-4">
+      <% @quests.each do |quest| %>
+        <% progress = @progresses[quest.id] %>
+        <div class="bg-stone-800 border border-stone-700 rounded-lg p-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-xl text-amber-200 font-bold"><%= quest.name %></h2>
+              <p class="text-stone-400 text-sm mt-1"><%= quest.description %></p>
+              <div class="text-xs text-stone-500 mt-2">
+                <%= quest.steps.count %> étape(s) · <%= quest.completion_xp %> XP à la fin
+              </div>
+            </div>
+            <div class="shrink-0 ml-4">
+              <% if progress&.completed? %>
+                <span class="text-green-400 text-sm">✓ Terminée</span>
+              <% elsif progress&.status == "in_progress" %>
+                <%= link_to "▶ Continuer", quest_path(quest),
+                    class: "bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm" %>
+                <div class="text-xs text-stone-500 text-center mt-1">
+                  étape <%= progress.current_step_index + 1 %> / <%= quest.steps.count %>
+                </div>
+              <% else %>
+                <%= button_to "Commencer", quest_quest_progresses_path(quest),
+                    method: :post,
+                    class: "bg-stone-600 hover:bg-stone-500 text-amber-200 px-4 py-2 rounded text-sm" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
