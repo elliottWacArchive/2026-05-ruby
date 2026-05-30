@@ -1,0 +1,20 @@
+/* styles globaux de l'app */
+
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'IM Fell English', Georgia, serif;
+  background-color: #0c0a09;
+  color: #fef3c7;
+  min-height: 100vh;
+}
+
+/* quelques utilitaires tailwind-like pour les classes inline des vues */
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* scrollbar custom */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1c1917; }
+::-webkit-scrollbar-thumb { background: #78350f; border-radius: 3px; }
