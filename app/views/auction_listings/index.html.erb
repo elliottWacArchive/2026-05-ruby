@@ -1,0 +1,50 @@
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl text-amber-400 font-bold">🏪 Hôtel des ventes</h1>
+    <%= link_to "Mettre en vente", new_auction_listing_path,
+        class: "bg-stone-700 hover:bg-stone-600 border border-amber-800 text-amber-200 px-4 py-2 rounded text-sm" %>
+  </div>
+
+  <% if current_character %>
+    <p class="text-stone-400 text-sm mb-6">Ton or : <span class="text-yellow-300 font-bold"><%= current_character.gold %> 🪙</span></p>
+  <% end %>
+
+  <% if @listings.empty? %>
+    <p class="text-stone-500">Aucun objet en vente pour l'instant.</p>
+  <% else %>
+    <div class="space-y-3">
+      <% @listings.each do |listing| %>
+        <div class="bg-stone-800 border border-stone-700 rounded-lg p-4 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded bg-stone-700 flex items-center justify-center">
+              <%= { "hat" => "🎩", "weapon" => "⚔️", "shield" => "🛡️" }[listing.item.slot] %>
+            </div>
+            <div>
+              <div class="font-bold text-amber-200"><%= listing.item.name %></div>
+              <div class="text-sm text-stone-400">
+                Vendu par <%= listing.seller.name %> ·
+                <% listing.item.hp_bonus.nonzero? %>
+                HP: <%= listing.item.hp_bonus > 0 ? "+" : "" %><%= listing.item.hp_bonus %> ·
+                Force: <%= listing.item.strength_bonus > 0 ? "+" : "" %><%= listing.item.strength_bonus %>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-yellow-300 font-bold"><%= listing.price %> 🪙</span>
+            <% if current_character && listing.seller != current_character %>
+              <%= button_to "Acheter", buy_auction_listing_path(listing),
+                  method: :post,
+                  class: "bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm" %>
+            <% elsif current_character && listing.seller == current_character %>
+              <%= button_to "Retirer", listing,
+                  method: :delete,
+                  data: { turbo_confirm: "Retirer cette annonce ?" },
+                  class: "bg-stone-600 hover:bg-stone-500 text-stone-200 px-4 py-2 rounded text-sm" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
