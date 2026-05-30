@@ -1,0 +1,35 @@
+<div class="max-w-2xl mx-auto text-center py-12">
+  <h1 class="text-5xl font-bold text-amber-400 mb-4 tracking-widest">⚔ Medieval RPG</h1>
+  <p class="text-stone-400 mb-10">Choisis ton héros ou crée-en un nouveau pour partir à l'aventure.</p>
+
+  <% if @characters.any? %>
+    <div class="mb-8">
+      <h2 class="text-xl text-amber-300 mb-4">Tes personnages</h2>
+      <div class="grid gap-4">
+        <% @characters.each do |char| %>
+          <div class="bg-stone-800 border border-stone-700 rounded-lg p-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <% if char.avatar.attached? %>
+                <%= image_tag char.avatar, class: "w-12 h-12 rounded-full object-cover border border-amber-700" %>
+              <% else %>
+                <div class="w-12 h-12 rounded-full bg-stone-700 flex items-center justify-center text-2xl">🧙</div>
+              <% end %>
+              <div class="text-left">
+                <div class="font-bold text-amber-200"><%= char.name %></div>
+                <div class="text-sm text-stone-400">Niv. <%= char.level %> · <%= char.base_hp %> PV · <%= char.base_strength %> Force</div>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <%= button_to "Jouer", select_character_path(char), method: :post,
+                  class: "bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm" %>
+              <%= link_to "Voir", character_path(char), class: "text-stone-400 hover:text-stone-200 text-sm px-3 py-2" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= link_to "＋ Nouveau personnage", new_character_path,
+      class: "inline-block bg-stone-700 hover:bg-stone-600 border border-amber-800 text-amber-200 px-6 py-3 rounded-lg" %>
+</div>

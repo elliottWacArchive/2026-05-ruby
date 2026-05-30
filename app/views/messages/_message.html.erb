@@ -1,0 +1,5 @@
+<div class="text-sm">
+  <span class="text-amber-500 font-bold"><%= message.user.game_master? ? message.npc.name : message.character.name %></span>
+  <span class="text-stone-300 ml-2"><%= message.content %></span>
+  <span class="text-stone-600 text-xs ml-1"><%= message.created_at.strftime("%H:%M") %></span>
+</div>
